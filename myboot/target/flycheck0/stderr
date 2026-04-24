@@ -1,5 +1,5 @@
-   0.113598800s  INFO prepare_target{force=false package_id=myboot v0.1.0 (C:\Users\eahan\OneDrive\Bifogade filer\r\myboot) target="myboot"}: cargo::core::compiler::fingerprint: fingerprint error for myboot v0.1.0 (C:\Users\eahan\OneDrive\Bifogade filer\r\myboot)/Check { test: false }/TargetInner { name: "myboot", doc: true, ..: with_path("C:\\Users\\eahan\\OneDrive\\Bifogade filer\\r\\myboot\\src\\main.rs", Edition2024) }
-   0.113648200s  INFO prepare_target{force=false package_id=myboot v0.1.0 (C:\Users\eahan\OneDrive\Bifogade filer\r\myboot) target="myboot"}: cargo::core::compiler::fingerprint:     err: failed to read `C:\Users\eahan\OneDrive\Bifogade filer\r\myboot\target\debug\.fingerprint\myboot-bdd03707a462365d\bin-myboot`
+   0.124544900s  INFO prepare_target{force=false package_id=myboot v0.1.0 (C:\Users\eahan\OneDrive\Bifogade filer\r\myboot) target="myboot"}: cargo::core::compiler::fingerprint: fingerprint error for myboot v0.1.0 (C:\Users\eahan\OneDrive\Bifogade filer\r\myboot)/Check { test: false }/TargetInner { name: "myboot", doc: true, ..: with_path("C:\\Users\\eahan\\OneDrive\\Bifogade filer\\r\\myboot\\src\\main.rs", Edition2024) }
+   0.124590300s  INFO prepare_target{force=false package_id=myboot v0.1.0 (C:\Users\eahan\OneDrive\Bifogade filer\r\myboot) target="myboot"}: cargo::core::compiler::fingerprint:     err: failed to read `C:\Users\eahan\OneDrive\Bifogade filer\r\myboot\target\debug\.fingerprint\myboot-bdd03707a462365d\bin-myboot`
 
 Caused by:
     Det går inte att hitta filen. (os error 2)
@@ -26,8 +26,8 @@ Stack backtrace:
   18: git_midx_writer_dump
   19: BaseThreadInitThunk
   20: RtlUserThreadStart
-   0.130347100s  INFO prepare_target{force=false package_id=myboot v0.1.0 (C:\Users\eahan\OneDrive\Bifogade filer\r\myboot) target="myboot"}: cargo::core::compiler::fingerprint: fingerprint error for myboot v0.1.0 (C:\Users\eahan\OneDrive\Bifogade filer\r\myboot)/Check { test: true }/TargetInner { name: "myboot", doc: true, ..: with_path("C:\\Users\\eahan\\OneDrive\\Bifogade filer\\r\\myboot\\src\\main.rs", Edition2024) }
-   0.130385800s  INFO prepare_target{force=false package_id=myboot v0.1.0 (C:\Users\eahan\OneDrive\Bifogade filer\r\myboot) target="myboot"}: cargo::core::compiler::fingerprint:     err: failed to read `C:\Users\eahan\OneDrive\Bifogade filer\r\myboot\target\debug\.fingerprint\myboot-01231055af5ff77d\test-bin-myboot`
+   0.140231200s  INFO prepare_target{force=false package_id=myboot v0.1.0 (C:\Users\eahan\OneDrive\Bifogade filer\r\myboot) target="myboot"}: cargo::core::compiler::fingerprint: fingerprint error for myboot v0.1.0 (C:\Users\eahan\OneDrive\Bifogade filer\r\myboot)/Check { test: true }/TargetInner { name: "myboot", doc: true, ..: with_path("C:\\Users\\eahan\\OneDrive\\Bifogade filer\\r\\myboot\\src\\main.rs", Edition2024) }
+   0.140261000s  INFO prepare_target{force=false package_id=myboot v0.1.0 (C:\Users\eahan\OneDrive\Bifogade filer\r\myboot) target="myboot"}: cargo::core::compiler::fingerprint:     err: failed to read `C:\Users\eahan\OneDrive\Bifogade filer\r\myboot\target\debug\.fingerprint\myboot-01231055af5ff77d\test-bin-myboot`
 
 Caused by:
     Det går inte att hitta filen. (os error 2)
@@ -55,6 +55,4 @@ Stack backtrace:
   19: BaseThreadInitThunk
   20: RtlUserThreadStart
     Checking myboot v0.1.0 (C:\Users\eahan\OneDrive\Bifogade filer\r\myboot)
-error: could not compile `myboot` (bin "myboot") due to 5 previous errors
-warning: build failed, waiting for other jobs to finish...
-error: could not compile `myboot` (bin "myboot" test) due to 5 previous errors
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.34s
