@@ -3,15 +3,12 @@ use std::f32::consts::PI;
 
 #[macroquad::main("System Boot")]
 async fn main() {
-    // 1. Specificera typen som f32 explicit för att undvika "ambiguous type"
+    // 1. Explicit f32 för att undvika "ambiguous numeric type"
     let mut frame_count: f32 = 0.0;
     
-    // --- NYTT: LADDA BILDEN ---
-    // Detta måste göras 'async' i början av main.
-    // Se till att bilden finns i en mapp som heter 'assets' bredvid din Cargo.toml.
-    let boot_texture_result = load_texture("/assets/boot_icon.png").await;
+    // 2. Ladda bilden (Se till att bilden finns i: assets/boot_icon.png)
+    let boot_texture_result = load_texture("assets/boot_icon.png").await;
 
-    // Hantera om bilden inte går att ladda (valfritt, men bra praxis)
     let boot_texture = match boot_texture_result {
         Ok(tex) => Some(tex),
         Err(e) => {
@@ -19,7 +16,6 @@ async fn main() {
             None
         }
     };
-    // ---------------------------
 
     let status_messages = vec![
         "LADDAR KÄRNMODULER...",
@@ -30,7 +26,7 @@ async fn main() {
 
     loop {
         frame_count += 0.05;
-        let elapsed = get_time() as f32; // Konvertera till f32
+        let elapsed = get_time() as f32;
         let pulse = (frame_count.sin() * 0.2) + 0.8;
         
         clear_background(Color::from_rgba(5, 5, 5, 255));
@@ -38,54 +34,50 @@ async fn main() {
         let center_x = screen_width() / 2.0;
         let center_y = screen_height() / 2.0;
 
-        // Logofärg med puls
-        let logo_color = Color::from_rgba(
+        // Färg för de ritade elementen (Cyan-blå)
+        let ui_color = Color::from_rgba(
             (135.0 * pulse) as u8, 
             (206.0 * pulse) as u8, 
             (235.0 * pulse) as u8, 
             255
         );
         
-        // Rita logotyp (pilen) lite högre upp för att ge plats
-        let logo_y_offset = -120.0;
-        draw_line(center_x, center_y + logo_y_offset - 60.0, center_x, center_y + logo_y_offset, 3.0, logo_color);
-        draw_line(center_x, center_y + logo_y_offset - 60.0, center_x - 20.0, center_y + logo_y_offset - 40.0, 3.0, logo_color);
-        draw_line(center_x, center_y + logo_y_offset - 60.0, center_x + 20.0, center_y + logo_y_offset - 40.0, 3.0, logo_color);
-        
-        // --- NYTT: RITA BILDEN ---
-        if let Some(tex) = boot_texture {
-            // Beräkna storlek och position
-            let img_width = 80.0; // Önskad bredd på skärmen
-            let img_height = tex.height() * (img_width / tex.width()); // Behåll bildförhållandet
-            
-            // Positionera bilden ovanför texten
-            let img_x = center_x - (img_width / 2.0);
-            let img_y = center_y + 10.0; // Justera detta värde för att placera den rätt vertikalt
+        // --- 1. RITA VEKTOR-LOGOTYP (Överst) ---
+        let logo_y = center_y - 150.0;
+        draw_line(center_x, logo_y - 40.0, center_x, logo_y + 20.0, 3.0, ui_color);
+        draw_line(center_x, logo_y - 40.0, center_x - 15.0, logo_y - 25.0, 3.0, ui_color);
+        draw_line(center_x, logo_y - 40.0, center_x + 15.0, logo_y - 25.0, 3.0, ui_color);
 
-            // Rita bilden
+        // --- 2. RITA BILDEN (Mitten) ---
+        if let Some(ref tex) = boot_texture {
+            let img_width = 120.0; 
+            let img_height = tex.height() * (img_width / tex.width());
+            
+            let img_x = center_x - (img_width / 2.0);
+            let img_y = center_y - 60.0;
+
             draw_texture_ex(
-                tex,
+                tex, // Här skickas referensen korrekt
                 img_x,
                 img_y,
-                WHITE, // Använd WHITE för att visa bilden med originalfärgerna
+                WHITE, 
                 DrawTextureParams {
                     dest_size: Some(vec2(img_width, img_height)),
                     ..Default::default()
                 },
             );
         }
-        // ------------------------
 
-        // Laddningssnurra (flyttad lite ner)
-        let spinner_y = center_y + 110.0;
-        let radius = 20.0;
+        // --- 3. LADDNINGSSNURRA ---
+        let spinner_y = center_y + 80.0;
+        let radius = 22.0;
         let angle_speed = elapsed * 5.0;
-        draw_circle_lines(center_x, spinner_y, radius, 3.0, Color::from_rgba(30, 30, 30, 255));
+        draw_circle_lines(center_x, spinner_y, radius, 3.0, Color::from_rgba(40, 40, 40, 255));
         
         draw_custom_arc(
             center_x, 
             spinner_y, 
-            15, 
+            20, 
             radius, 
             angle_speed * (180.0 / PI), 
             90.0, 
@@ -93,18 +85,21 @@ async fn main() {
             SKYBLUE
         );
 
-        // Text (flyttad lite ner för att ge plats åt bilden)
-        let text_y = center_y + 160.0;
-        draw_text("SYSTEM STARTAR", center_x - 110.0, text_y, 30.0, WHITE);
+        // --- 4. TEXT (Nederst) ---
+        let text_y = center_y + 140.0;
+        draw_text("SYSTEM STARTAR", center_x - 115.0, text_y, 30.0, WHITE);
 
         let msg_idx = ((elapsed / 2.0) as usize).min(status_messages.len() - 1);
-        draw_text(status_messages[msg_idx], center_x - 60.0, text_y + 30.0, 18.0, GRAY);
+        draw_text(status_messages[msg_idx], center_x - 70.0, text_y + 35.0, 18.0, GRAY);
+
+        // Version i hörnet
+        draw_text("Version 2.3.1", screen_width() - 110.0, screen_height() - 20.0, 16.0, DARKGRAY);
 
         next_frame().await
     }
 }
 
-// Hjälpfunktion för att rita bågen (ingår inte som standard i Macroquad)
+// Hjälpfunktion för att rita bågen (fixad för att undvika deg_to_rad-felet)
 fn draw_custom_arc(x: f32, y: f32, segments: u8, radius: f32, start_angle: f32, sweep_angle: f32, thickness: f32, color: Color) {
     for i in 0..segments {
         let a1 = start_angle + (i as f32 * sweep_angle / segments as f32);
