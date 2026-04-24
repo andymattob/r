@@ -12,7 +12,7 @@ enum SystemState {
 async fn main() {
     let mut frame_count: f32 = 0.0;
     let mut state = SystemState::Booting;
-    let mut transition_alpha = 0.0; // För att tona in wallpaper
+    let mut transition_alpha = 0.0;
 
     // Ladda bilder
     let boot_tex = load_texture("assets/boot_icon.png").await.ok();
@@ -32,14 +32,13 @@ async fn main() {
 
         clear_background(BLACK);
 
-        // --- LOGIK FÖR TILLSTÅND ---
-        // Efter 6 sekunder (eller när meddelandena är klara), gå till Transition
-        if state == SystemState::Booting && elapsed > 6.0 {
+        // --- TILLSTÅNDSLOGIK ---
+        if state == SystemState::Booting && elapsed > 5.0 {
             state = SystemState::Transition;
         }
 
         if state == SystemState::Transition {
-            transition_alpha += 0.01; // Sänka/höja hastigheten på toningen här
+            transition_alpha += 0.01;
             if transition_alpha >= 1.0 {
                 state = SystemState::Desktop;
             }
@@ -52,7 +51,7 @@ async fn main() {
                     bg,
                     0.0,
                     0.0,
-                    Color::new(1.0, 1.0, 1.0, transition_alpha), // Tona in bilden
+                    Color::new(1.0, 1.0, 1.0, transition_alpha),
                     DrawTextureParams {
                         dest_size: Some(vec2(screen_width(), screen_height())),
                         ..Default::default()
@@ -61,13 +60,35 @@ async fn main() {
             }
         }
 
-        // --- RITA BOOTSCREEN (bara om vi inte är helt i Desktop) ---
+        // --- RITA MENY / TASKBAR (Endast i Desktop-läge) ---
+        if state == SystemState::Desktop {
+            let bar_height = 50.0;
+            let bar_y = screen_height() - bar_height;
+            
+            // Rita själva fältet (halvgenomskinlig svart/grå)
+            draw_rectangle(0.0, bar_y, screen_width(), bar_height, Color::new(0.1, 0.1, 0.1, 0.8));
+            draw_line(0.0, bar_y, screen_width(), bar_y, 1.0, Color::new(1.0, 1.0, 1.0, 0.2));
+
+            // Rita "Start"-knapp och några ikoner
+            draw_text("START", 20.0, bar_y + 32.0, 25.0, WHITE);
+            
+            // Simulerade ikoner (rektanglar)
+            let icons = ["WEB", "FILES", "CMD", "SETTINGS"];
+            for (i, label) in icons.iter().enumerate() {
+                let x_pos = 120.0 + (i as f32 * 90.0);
+                draw_rectangle(x_pos, bar_y + 10.0, 70.0, 30.0, Color::new(0.3, 0.3, 0.3, 0.5));
+                draw_text(label, x_pos + 10.0, bar_y + 30.0, 18.0, LIGHTGRAY);
+            }
+
+            // Klocka längst till höger
+            draw_text("23:59", screen_width() - 80.0, bar_y + 32.0, 22.0, WHITE);
+        }
+
+        // --- RITA BOOTSCREEN (Tona ut) ---
         if state != SystemState::Desktop {
-            let boot_alpha = 1.0 - transition_alpha; // Tona ut boot-elementen
-            let pulse = (frame_count.sin() * 0.2) + 0.8;
+            let boot_alpha = 1.0 - transition_alpha;
             let boot_color = |r, g, b| Color::new(r, g, b, boot_alpha);
 
-            // 1. Rita bilden
             if let Some(ref tex) = boot_tex {
                 let img_w = 120.0;
                 let img_h = tex.height() * (img_w / tex.width());
@@ -80,23 +101,11 @@ async fn main() {
                 );
             }
 
-            // 2. Laddningssnurra
             let spinner_y = center_y + 20.0;
-            draw_circle_lines(center_x, spinner_y, 22.0, 3.0, Color::new(0.1, 0.1, 0.1, boot_alpha));
             draw_custom_arc(center_x, spinner_y, 20, 22.0, (elapsed * 300.0) % 360.0, 90.0, 3.0, Color::new(0.5, 0.8, 0.9, boot_alpha));
 
-            // 3. Text
             let text_y = center_y + 80.0;
             draw_text("SYSTEM STARTAR", center_x - 115.0, text_y, 30.0, boot_color(1.0, 1.0, 1.0));
-            
-            let msg_idx = ((elapsed / 2.0) as usize).min(status_messages.len() - 1);
-            draw_text(status_messages[msg_idx], center_x - 70.0, text_y + 35.0, 18.0, boot_color(0.5, 0.5, 0.5));
-        }
-
-        // Om vi är i Desktop-läge, rita ett enkelt välkomstmeddelande
-        if state == SystemState::Desktop {
-            draw_text("VÄLKOMMEN", 40.0, 60.0, 40.0, WHITE);
-            draw_text("Systemet är redo för användning.", 40.0, 90.0, 20.0, GRAY);
         }
 
         next_frame().await
