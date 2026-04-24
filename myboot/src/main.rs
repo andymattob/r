@@ -34,30 +34,18 @@ async fn main() {
         let center_x = screen_width() / 2.0;
         let center_y = screen_height() / 2.0;
 
-        // Färg för de ritade elementen (Cyan-blå)
-        let ui_color = Color::from_rgba(
-            (135.0 * pulse) as u8, 
-            (206.0 * pulse) as u8, 
-            (235.0 * pulse) as u8, 
-            255
-        );
-        
-        // --- 1. RITA VEKTOR-LOGOTYP (Överst) ---
-        let logo_y = center_y - 150.0;
-        draw_line(center_x, logo_y - 40.0, center_x, logo_y + 20.0, 3.0, ui_color);
-        draw_line(center_x, logo_y - 40.0, center_x - 15.0, logo_y - 25.0, 3.0, ui_color);
-        draw_line(center_x, logo_y - 40.0, center_x + 15.0, logo_y - 25.0, 3.0, ui_color);
-
-        // --- 2. RITA BILDEN (Mitten) ---
+        // --- 1. RITA BILDEN (Uppflyttad eftersom pilen är borta) ---
         if let Some(ref tex) = boot_texture {
             let img_width = 120.0; 
             let img_height = tex.height() * (img_width / tex.width());
             
             let img_x = center_x - (img_width / 2.0);
-            let img_y = center_y - 60.0;
+            
+            // Justerad Y-position för att kompensera för den borttagna pilen
+            let img_y = center_y - 120.0; 
 
             draw_texture_ex(
-                tex, // Här skickas referensen korrekt
+                tex, // Referensen skickas korrekt
                 img_x,
                 img_y,
                 WHITE, 
@@ -68,8 +56,8 @@ async fn main() {
             );
         }
 
-        // --- 3. LADDNINGSSNURRA ---
-        let spinner_y = center_y + 80.0;
+        // --- 2. LADDNINGSSNURRA (Justerad Y-position) ---
+        let spinner_y = center_y + 20.0; 
         let radius = 22.0;
         let angle_speed = elapsed * 5.0;
         draw_circle_lines(center_x, spinner_y, radius, 3.0, Color::from_rgba(40, 40, 40, 255));
@@ -85,8 +73,8 @@ async fn main() {
             SKYBLUE
         );
 
-        // --- 4. TEXT (Nederst) ---
-        let text_y = center_y + 140.0;
+        // --- 3. TEXT (Justerad Y-position) ---
+        let text_y = center_y + 80.0; 
         draw_text("SYSTEM STARTAR", center_x - 115.0, text_y, 30.0, WHITE);
 
         let msg_idx = ((elapsed / 2.0) as usize).min(status_messages.len() - 1);
