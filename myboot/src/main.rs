@@ -73,7 +73,7 @@ async fn main() {
 
             // Klocka
             let time_str = Local::now().format("%H:%M:%S").to_string();
-            draw_text(&time_str, screen_width() - 120.0, bar_y + 32.0, 22.0, CYAN);
+            draw_text(&time_str, screen_width() - 120.0, bar_y + 32.0, 22.0, SKYBLUE);
         }
 
         // --- BOOTSCREEN (Tona ut) ---
