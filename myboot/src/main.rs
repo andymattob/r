@@ -7,7 +7,7 @@ async fn main() {
     let mut frame_count: f32 = 0.0;
     
     // 2. Ladda bilden (Se till att bilden finns i: assets/boot_icon.png)
-    let boot_texture_result = load_texture("/assets/boot_icon.png").await;
+    let boot_texture_result = load_texture("assets/boot_icon.png").await;
 
     let boot_texture = match boot_texture_result {
         Ok(tex) => Some(tex),
