@@ -9,7 +9,7 @@ async fn main() {
     // --- NYTT: LADDA BILDEN ---
     // Detta måste göras 'async' i början av main.
     // Se till att bilden finns i en mapp som heter 'assets' bredvid din Cargo.toml.
-    let boot_texture_result = load_texture("assets/boot_icon.png").await;
+    let boot_texture_result = load_texture("/assets/boot_icon.png").await;
 
     // Hantera om bilden inte går att ladda (valfritt, men bra praxis)
     let boot_texture = match boot_texture_result {
