@@ -24,7 +24,7 @@ async fn main() {
     let mut file_manager = Window { title: "File Manager".to_string(), is_open: false, color: DARKGRAY };
     let mut cmd_window = Window { title: "Terminal (CMD)".to_string(), is_open: false, color: BLACK };
 
-    let boot_tex = load_texture("assets/boot_icon.png").await.ok();
+    let boot_text = load_texture("assets/boot_icon.png").await.ok();
     let wallpaper_tex = load_texture("assets/wallpaper.png").await.ok();
 
     loop {
